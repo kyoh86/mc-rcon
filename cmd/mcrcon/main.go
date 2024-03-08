@@ -15,6 +15,7 @@ import (
 
 var (
 	flags struct {
+		command  string
 		host     string
 		port     int
 		password bool
@@ -25,6 +26,7 @@ func init() {
 	flag.StringVar(&flags.host, "host", "localhost", "Minecraft server host")
 	flag.IntVar(&flags.port, "port", 25575, "Minecraft server port")
 	flag.BoolVar(&flags.password, "password", false, "Set if you want to input Minecraft server RCON password as secret")
+	flag.StringVar(&flags.command, "command", "", "Command line to execute")
 	flag.Parse()
 }
 
@@ -62,21 +64,28 @@ func main() {
 		log.Fatalln("Auth failed", err)
 	}
 
-	for {
-		cmd, err := promptCommand()
-		if err != nil {
-			log.Fatalln("Failed to read command: ", err)
+	if flags.command == "" {
+		for {
+			cmd, err := promptCommand()
+			if err != nil {
+				log.Fatalln("Failed to read command: ", err)
+			}
+			words := strings.Split(strings.TrimSpace(cmd), " ")
+			if len(words) > 0 && words[0] == "exit" {
+				return
+			}
+			resp, err := conn.SendCommand(cmd)
+			if err != nil {
+				log.Fatalln("Command failed", err)
+			}
+			fmt.Println(resp)
+			fmt.Println()
 		}
-		words := strings.Split(strings.TrimSpace(cmd), " ")
-		if len(words) > 0 && words[0] == "exit" {
-			return
-		}
-		resp, err := conn.SendCommand(cmd)
+	} else {
+		resp, err := conn.SendCommand(flags.command)
 		if err != nil {
 			log.Fatalln("Command failed", err)
 		}
 		fmt.Println(resp)
-		fmt.Println()
 	}
-
 }
