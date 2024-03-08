@@ -1,3 +1,3 @@
-module github.com/Kelwing/mc-rcon
+module github.com/kyoh86/mcrcon
 
 go 1.20

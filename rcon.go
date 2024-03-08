@@ -1,4 +1,4 @@
-package mc_rcon
+package mcrcon
 
 import (
 	"bytes"
