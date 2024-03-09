@@ -55,7 +55,7 @@ func main() {
 	}
 	err := conn.Open(fmt.Sprintf("%s:%d", flags.host, flags.port), password)
 	if err != nil {
-		log.Fatalln("Open failed", err)
+		log.Fatalln("Open failed: ", err)
 	}
 	defer conn.Close()
 
@@ -76,7 +76,7 @@ func main() {
 			}
 			resp, err := conn.SendCommand(cmd)
 			if err != nil {
-				log.Fatalln("Command failed", err)
+				log.Fatalln("Command failed: ", err)
 			}
 			fmt.Println(resp)
 			fmt.Println()
@@ -84,7 +84,7 @@ func main() {
 	} else {
 		resp, err := conn.SendCommand(flags.command)
 		if err != nil {
-			log.Fatalln("Command failed", err)
+			log.Fatalln("Command failed: ", err)
 		}
 		fmt.Println(resp)
 	}
